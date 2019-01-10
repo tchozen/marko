@@ -117,19 +117,19 @@ module.exports = function defineWidget(def, renderer) {
                     return self;
                 }
             });
-        }
-        if (init) init.call(this, config || {});
-        if (onRender) {
-            onRender.call(this, { firstRender: true });
-        }
-        this.on("___legacyRender", function() {
-            if (!self.___legacyExplicitUpdate && onBeforeUpdate) {
-                onBeforeUpdate.call(this);
+            if (init) init.call(this, config || {});
+            if (onRender) {
+                onRender.call(this, { firstRender: true });
             }
+            this.on("___legacyRender", function() {
+                if (!self.___legacyExplicitUpdate && onBeforeUpdate) {
+                    onBeforeUpdate.call(this);
+                }
 
-            self.___didUpdate = true;
-        });
-        this.___input = null;
+                self.___didUpdate = true;
+            });
+            this.___input = null;
+        }
     };
 
     proto.onUpdate = function() {
