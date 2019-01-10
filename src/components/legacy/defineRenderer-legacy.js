@@ -57,6 +57,7 @@ module.exports = function defineRenderer(renderingLogic) {
             var widgetConfig;
             var widgetState;
             var widgetBody;
+            var templateData;
             var id;
 
             if (!component && componentLookup) {
@@ -86,18 +87,15 @@ module.exports = function defineRenderer(renderingLogic) {
                     newProps = getInitialProps(newProps, out) || {};
                 }
 
-                if (getWidgetConfig) {
-                    // If getWidgetConfig() was implemented then use that to
-                    // get the widget config. The widget config will be passed
-                    // to the widget constructor. If rendered on the server the
-                    // widget config will be serialized.
-                    widgetConfig = getWidgetConfig(newProps, out);
-                }
-
                 if (getInitialState) {
                     // This optional method is used to derive the widget state
                     // from the input properties
                     widgetState = getInitialState(newProps, out);
+                }
+
+                if (getTemplateData) {
+                    // Use getTemplateData(state, props, out) to get the template data.
+                    templateData = getTemplateData(widgetState, newProps, out);
                 }
 
                 if (getInitialBody) {
@@ -110,18 +108,25 @@ module.exports = function defineRenderer(renderingLogic) {
                     // getInitialBody was not implemented
                     widgetBody = newProps.renderBody;
                 }
+
+                if (getWidgetConfig) {
+                    // If getWidgetConfig() was implemented then use that to
+                    // get the widget config. The widget config will be passed
+                    // to the widget constructor. If rendered on the server the
+                    // widget config will be serialized.
+                    widgetConfig = getWidgetConfig(newProps, out);
+                }
             } else if (component) {
                 widgetBody = component.___legacyBody;
                 widgetState = component.___rawState;
                 widgetConfig = component.widgetConfig;
+
+                if (getTemplateData) {
+                    templateData = getTemplateData(widgetState, newProps, out);
+                }
             }
 
-            // Use getTemplateData(state, props, out) to get the template
-            // data. If that method is not provided then just use the
-            // the state (if provided) or the input data.
-            var templateData = getTemplateData
-                ? getTemplateData(widgetState, newProps, out)
-                : widgetState || newProps;
+            templateData = templateData || widgetState || newProps;
 
             if (templateData) {
                 // We are going to be modifying the template data so we need to
