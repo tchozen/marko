@@ -13,7 +13,7 @@ var endComponent = require("./endComponent");
 var COMPONENT_BEGIN_ASYNC_ADDED_KEY = "$wa";
 
 function resolveComponentKey(key, parentComponentDef) {
-    if (key[0] === "#") {
+    if (key && key[0] === "#") {
         return key.substring(1);
     } else {
         return parentComponentDef.id + "-" + parentComponentDef.___nextKey(key);
