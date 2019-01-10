@@ -303,7 +303,9 @@ Component.prototype = componentProto = {
 
         delete componentLookup[this.id];
         delete this.___rootNode;
-        this.___keyedElements = {};
+        this.___keyedElements = {
+            "@_wbind": this.___keyedElements["@_wbind"]
+        };
     },
 
     ___destroyShallow: function() {
