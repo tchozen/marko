@@ -50,12 +50,11 @@ class ComponentArgs {
 
         var builder = transformHelper.builder;
 
-        var args = new Array(4);
-        args[0] = builder.identifier("__component");
-        args[1] = this.key;
+        var args = new Array(3);
+        args[0] = this.key;
 
         if (this.customEvents) {
-            args[2] = builder.literal(this.customEvents);
+            args[1] = builder.literal(this.customEvents);
         }
 
         args = finalizeArgs(args, builder);

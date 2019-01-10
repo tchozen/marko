@@ -622,7 +622,8 @@ class CustomTag extends HtmlElement {
 
             renderTagNode = this.generateRenderTagCode(codegen, tagVar, [
                 inputProps,
-                builder.identifierOut()
+                builder.identifierOut(),
+                builder.identifier("__component")
             ]);
         } else {
             if (rendererRequirePath) {
@@ -646,21 +647,27 @@ class CustomTag extends HtmlElement {
 
                 tagArgs = [
                     inputProps,
-                    parentCustomTag.getNestedTagVar(context)
+                    parentCustomTag.getNestedTagVar(context),
+                    builder.identifier("__component")
                 ];
             } else if (isDynamicTag) {
                 tagVar = context.helper("dynamicTag");
                 tagArgs = [
                     this.tagNameExpression,
                     inputProps,
-                    builder.identifierOut()
+                    builder.identifierOut(),
+                    builder.identifier("__component")
                 ];
             } else {
                 loadTag = builder.functionCall(context.helper("loadTag"), [
                     requireRendererFunctionCall // The first param is the renderer
                 ]);
 
-                tagArgs = [inputProps, builder.identifierOut()];
+                tagArgs = [
+                    inputProps,
+                    builder.identifierOut(),
+                    builder.identifier("__component")
+                ];
             }
 
             tagVar = tagVar || codegen.addStaticVar(tagVarName, loadTag);
